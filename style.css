@@ -157,3 +157,23 @@ height: 50%
     font-weight: bold;
     margin-top: 100px;
 }
+
+.circle {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    display: inline-block;
+    margin-right: 5px;
+  }
+  
+  .green {
+    background-color: green;
+  }
+  
+  .gray {
+    background-color: gray;
+  }
+  
+  .red {
+    background-color: red;
+  }
