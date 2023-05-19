@@ -1,105 +1,33 @@
 ![rm name](https://github.com/Thamireslopescz/API-ProjFinal-RM/assets/100656019/644bd4db-9d87-4417-830a-f3c4ed0cea5a)
 
-# API de Rick and Morty - Listagem de Personagens
+# API de Rick and Morty
 
-Esta API permite a listagem de personagens da série Rick and Morty, fornecendo informações sobre cada um deles. 
+Este é um projeto de uma página web que utiliza a API de Rick and Morty para buscar e exibir informações sobre os personagens, localizações e episódios da série.
 
-## Endpoints
+## Funcionalidades
 
-### Listar todos os personagens
+- Busca de personagens: você pode digitar um nome na caixa de pesquisa e clicar no botão de busca para encontrar personagens correspondentes.
+- Exibição de personagens: os personagens encontrados são exibidos na página em forma de cartões, mostrando sua imagem, nome, status, espécie, última localização conhecida e último episódio em que apareceu.
+- Contagem de personagens, localizações e episódios: a contagem total de personagens, localizações e episódios é exibida no rodapé da página e é atualizada automaticamente.
+- Estilização responsiva: a página utiliza o framework Bootstrap e é responsiva, adaptando-se a diferentes tamanhos de tela.
 
-Retorna uma lista de todos os personagens da série Rick and Morty.
+## Tecnologias utilizadas
 
-- **URL:** `/characters`
-- **Método:** GET
-- **Parâmetros de consulta opcionais:**
-  - `page` (número da página a ser retornada, padrão é 1)
-- **Resposta de exemplo:**
+- HTML
+- CSS (com Bootstrap)
+- JavaScript
+- Biblioteca Axios para fazer requisições HTTP
 
-```json
-{
-  "info": {
-    "count": 671,
-    "pages": 34,
-    "next": "https://api.example.com/characters?page=2",
-    "prev": null
-  },
-  "results": [
-    {
-      "id": 1,
-      "name": "Rick Sanchez",
-      "status": "Alive",
-      "species": "Human",
-      "gender": "Male",
-      "origin": {
-        "name": "Earth",
-        "url": "https://rickandmortyapi.com/api/location/1"
-      },
-      "location": {
-        "name": "Earth",
-        "url": "https://rickandmortyapi.com/api/location/20"
-      },
-      "image": "https://rickandmortyapi.com/api/character/avatar/1.jpeg"
-    },
-    // Outros personagens...
-  ]
-}
-```
+## Como executar o projeto
 
-### Obter informações de um personagem
+1. Faça o download dos arquivos deste repositório.
+2. Abra o arquivo `index.html` em um navegador web.
 
-Retorna informações detalhadas de um personagem específico.
-
-- **URL:** `/characters/{id}`
-- **Método:** GET
-- **Parâmetros de URL:**
-  - `id` (identificador único do personagem)
-- **Resposta de exemplo:**
-
-```json
-{
-  "id": 1,
-  "name": "Rick Sanchez",
-  "status": "Alive",
-  "species": "Human",
-  "gender": "Male",
-  "origin": {
-    "name": "Earth",
-    "url": "https://rickandmortyapi.com/api/location/1"
-  },
-  "location": {
-    "name": "Earth",
-    "url": "https://rickandmortyapi.com/api/location/20"
-  },
-  "image": "https://rickandmortyapi.com/api/character/avatar/1.jpeg",
-  "episode": [
-    "https://rickandmortyapi.com/api/episode/1",
-    "https://rickandmortyapi.com/api/episode/2",
-    // Outros episódios...
-  ]
-}
-```
-
-## Recursos Disponíveis
-
-A API oferece os seguintes recursos:
-
-- `/characters` - Listagem de todos os personagens.
-- `/characters/{id}` - Informações detalhadas de um personagem específico.
-- `/episodes` - Listagem de todos os episódios da série.
-- `/episodes/{id}` - Informações detalhadas de um episódio específico.
-- `/locations` - Listagem de todas as localizações da série.
-- `/locations/{id}` - Informações detalhadas de uma localização específica.
-
-## Status de Resposta
-
-A API retorna os seguintes códigos de status:
-
-- 200 OK: Requisição bem-sucedida.
-- 404 Not Found: Recurso não encontrado.
-- 500 Internal Server Error: Erro interno do servidor.
-
-## Autor
+## Autora
 
 Esta API é mantida e disponibilizada por [Thamires Lopes]. Para mais informações, entre em contato através do email [thamiresribeirocezar@gmail.com].
+
+## Agradecimentos
+
+Agradecemos à API de Rick and Morty por fornecer os dados utilizados neste projeto.
 
