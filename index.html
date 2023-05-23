@@ -25,6 +25,10 @@
 
 <div class="card-container" id="cardContainer"></div>
 
+<div id="pagination"></div>
+
+<div id="totalPages"></div>
+
 <div class="image-before-footer">
     <img src="./assets/rick-and-morty-portal-shoes-white-clothing-zavvi-23.png" alt="Imagem RM">
 </div>
@@ -46,116 +50,113 @@
 
 <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
 <script>
-  // Função para buscar personagens
-function searchCharacters() {
-    const searchInput = document.getElementById('searchInput').value;
-    const apiUrl = `https://rickandmortyapi.com/api/character?name=${searchInput}`;
+    let currentPage = 1;
+    let totalPages = 1;
 
-    axios.get(apiUrl)
-        .then(function (response) {
-            const characters = response.data.results;
-            displayCharacters(characters);
-            updateCounts();
-        })
-        .catch(function (error) {
-            console.log(error);
-        });
-}
+    function searchCharacters() {
+        const searchInput = document.getElementById('searchInput').value;
+        const apiUrl = `https://rickandmortyapi.com/api/character?name=${searchInput}&page=${currentPage}`;
 
-// Função para exibir os personagens na página
-function displayCharacters(characters) {
-    const cardContainer = document.getElementById('cardContainer');
-    cardContainer.innerHTML = '';
-
-    characters.forEach(function (character) {
-        const card = document.createElement('article');
-        card.classList.add('card');
-
-        const image = document.createElement('img');
-        image.src = character.image;
-        image.alt = character.name;
-        card.appendChild(image);
-
-        const cardText = document.createElement('div');
-        cardText.classList.add('card-text');
-
-        const name = document.createElement('h2');
-        name.textContent = character.name;
-        cardText.appendChild(name);
-
-        const status = document.createElement('h4');
-        status.innerHTML = `<span class="circle ${getStatusColor(character.status)}"></span>${character.status} - ${character.species}`;
-        cardText.appendChild(status);
-
-        const lastLocationLabel = document.createElement('p');
-        lastLocationLabel.textContent = 'Última localização conhecida:';
-        cardText.appendChild(lastLocationLabel);
-
-        const lastLocation = document.createElement('p');
-        // Buscar os dados completos da localização do personagem
-        axios.get(character.location.url)
+        axios.get(apiUrl)
             .then(function (response) {
-                lastLocation.textContent = response.data.name;
+                const characters = response.data.results;
+                totalPages = response.data.info.pages;
+                displayCharacters(characters);
+                updateCounts();
+                updatePagination();
             })
             .catch(function (error) {
                 console.log(error);
             });
-        cardText.appendChild(lastLocation);
+    }
 
-        const lastSeenLabel = document.createElement('p');
-        lastSeenLabel.textContent = 'Visto a última vez em:';
-        cardText.appendChild(lastSeenLabel);
+    function displayCharacters(characters) {
+        const cardContainer = document.getElementById('cardContainer');
+        cardContainer.innerHTML = '';
 
-        const lastSeen = document.createElement('p');
-        // Buscar os dados completos do episódio mais recente do personagem
-        axios.get(character.episode[character.episode.length - 1])
+        characters.forEach(function (character) {
+            const card = document.createElement('article');
+            card.classList.add('card');
+
+            const image = document.createElement('img');
+            image.src = character.image;
+            image.alt = character.name;
+            card.appendChild(image);
+
+            const cardText = document.createElement('div');
+            cardText.classList.add('card-text');
+
+            const name = document.createElement('h2');
+            name.textContent = character.name;
+            cardText.appendChild(name);
+
+            const status = document.createElement('h4');
+            status.innerHTML = `<span class="circle ${getStatusColor(character.status)}"></span>${character.status} - ${character.species}`;
+            cardText.appendChild(status);
+
+            const lastLocationLabel = document.createElement('p');
+            lastLocationLabel.textContent = 'Última localização conhecida:';
+            cardText.appendChild(lastLocationLabel);
+
+            const lastLocation = document.createElement('p');
+            axios.get(character.location.url)
+                .then(function (response) {
+                    lastLocation.textContent = response.data.name;
+                })
+                .catch(function (error) {
+                    console.log(error);
+                });
+            cardText.appendChild(lastLocation);
+
+            const lastSeenLabel = document.createElement('p');
+            lastSeenLabel.textContent = 'Visto a última vez em:';
+            cardText.appendChild(lastSeenLabel);
+
+            const lastSeen = document.createElement('p');
+            axios.get(character.episode[character.episode.length - 1])
+                .then(function (response) {
+                    lastSeen.textContent = response.data.name;
+                })
+                .catch(function (error) {
+                    console.log(error);
+                });
+            cardText.appendChild(lastSeen);
+
+            card.appendChild(cardText);
+            cardContainer.appendChild(card);
+        });
+    }
+
+    function updateCounts() {
+        axios.all([
+            axios.get('https://rickandmortyapi.com/api/character'),
+            axios.get('https://rickandmortyapi.com/api/episode')
+        ])
+        .then(axios.spread(function (characterResponse, episodeResponse) {
+            const characterCount = characterResponse.data.info.count;
+            const episodeCount = episodeResponse.data.info.count;
+
+            document.getElementById('characterCount').textContent = `PERSONAGENS: ${characterCount}`;
+            document.getElementById('episodeCount').textContent = `EPISÓDIOS: ${episodeCount}`;
+
+            searchLocations();
+        }))
+        .catch(function (error) {
+            console.log(error);
+        });
+    }
+
+    function searchLocations() {
+        axios.get('https://rickandmortyapi.com/api/location')
             .then(function (response) {
-                lastSeen.textContent = response.data.name;
+                const locationCount = response.data.info.count;
+                document.getElementById('locationCount').textContent = `LOCALIZAÇÕES: ${locationCount}`;
             })
             .catch(function (error) {
                 console.log(error);
             });
-        cardText.appendChild(lastSeen);
+    }
 
-        card.appendChild(cardText);
-        cardContainer.appendChild(card);
-    });
-}
-
-// Função para buscar as localizações dos personagens
-function searchLocations() {
-    axios.get('https://rickandmortyapi.com/api/location')
-        .then(function (response) {
-            const locationCount = response.data.info.count;
-            document.getElementById('locationCount').textContent = `LOCALIZAÇÕES: ${locationCount}`;
-        })
-        .catch(function (error) {
-            console.log(error);
-        });
-}
-
-// Função para atualizar as contagens na página
-function updateCounts() {
-    axios.all([
-        axios.get('https://rickandmortyapi.com/api/character'),
-        axios.get('https://rickandmortyapi.com/api/episode')
-    ])
-    .then(axios.spread(function (characterResponse, episodeResponse) {
-        const characterCount = characterResponse.data.info.count;
-        const episodeCount = episodeResponse.data.info.count;
-
-        document.getElementById('characterCount').textContent = `PERSONAGENS: ${characterCount}`;
-        document.getElementById('episodeCount').textContent = `EPISÓDIOS: ${episodeCount}`;
-
-        // Chamar a função para buscar as localizações dos personagens
-        searchLocations();
-    }))
-    .catch(function (error) {
-        console.log(error);
-    });
-}
-
-    // Função auxiliar para obter a cor do status
     function getStatusColor(status) {
         switch (status) {
             case 'Alive':
@@ -165,6 +166,43 @@ function updateCounts() {
             default:
                 return 'gray';
         }
+    }
+
+    function goToPage(page) {
+        if (page >= 1 && page <= totalPages) {
+            currentPage = page;
+            searchCharacters();
+        }
+    }
+
+    function updatePagination() {
+        const pagination = document.getElementById('pagination');
+        pagination.innerHTML = '';
+
+        if (totalPages > 1) {
+            const previousButton = createPaginationButton('Anterior', currentPage - 1);
+            pagination.appendChild(previousButton);
+
+            for (let i = 1; i <= totalPages; i++) {
+                const pageButton = createPaginationButton(i, i);
+                if (i === currentPage) {
+                    pageButton.classList.add('active');
+                }
+                pagination.appendChild(pageButton);
+            }
+
+            const nextButton = createPaginationButton('Próxima', currentPage + 1);
+            pagination.appendChild(nextButton);
+        }
+    }
+
+    function createPaginationButton(text, page) {
+        const button = document.createElement('button');
+        button.textContent = text;
+        button.addEventListener('click', function () {
+            goToPage(page);
+        });
+        return button;
     }
 </script>
 

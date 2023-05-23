@@ -177,3 +177,36 @@ height: 50%
   .red {
     background-color: red;
   }
+
+
+
+/* Estilo para os botões de paginação */
+
+#pagination {
+    display: flex;
+    justify-content: center;
+    margin: 20px 0;
+}
+
+#pagination button {
+    margin: 0 5px;
+    padding: 5px 10px;
+    background-color: #028200;
+    border: none;
+    cursor: pointer;
+}
+
+#pagination button:hover {
+    background-color: #01924e;
+}
+
+#pagination button.active {
+    background-color: #848484;
+    color: #fff;
+}
+
+/* Estilo para o número total de páginas */
+#totalPages {
+    margin-top: 10px;
+    text-align: center;
+}
