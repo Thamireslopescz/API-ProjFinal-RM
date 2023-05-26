@@ -51,6 +51,25 @@
     let currentPage = 1;
     let totalPages = 1;
 
+    function getRandomCharacters() {
+  const apiUrl = 'https://rickandmortyapi.com/api/character/random';
+
+  axios.get(apiUrl)
+    .then(function (response) {
+      const character = response.data;
+      displayCharacters([character]); // Exibe o personagem em uma matriz para manter a consistência com a função displayCharacters
+    })
+    .catch(function (error) {
+      console.log(error);
+    });
+}
+
+
+// Chame a função getRandomCharacters no carregamento inicial da página
+getRandomCharacters();
+
+
+
     function searchCharacters() {
         const searchInput = document.getElementById('searchInput').value;
         const apiUrl = `https://rickandmortyapi.com/api/character?name=${searchInput}&page=${currentPage}`;
@@ -126,23 +145,28 @@
     }
 
     function updateCounts() {
-        axios.all([
-            axios.get('https://rickandmortyapi.com/api/character'),
-            axios.get('https://rickandmortyapi.com/api/episode')
-        ])
-        .then(axios.spread(function (characterResponse, episodeResponse) {
-            const characterCount = characterResponse.data.info.count;
-            const episodeCount = episodeResponse.data.info.count;
+  axios.all([
+    axios.get('https://rickandmortyapi.com/api/character'),
+    axios.get('https://rickandmortyapi.com/api/location'),
+    axios.get('https://rickandmortyapi.com/api/episode')
+  ])
+    .then(axios.spread(function (characterResponse, locationResponse, episodeResponse) {
+      const characterCount = characterResponse.data.info.count;
+      const locationCount = locationResponse.data.info.count;
+      const episodeCount = episodeResponse.data.info.count;
 
-            document.getElementById('characterCount').textContent = `PERSONAGENS: ${characterCount}`;
-            document.getElementById('episodeCount').textContent = `EPISÓDIOS: ${episodeCount}`;
+      document.getElementById('characterCount').textContent = `PERSONAGENS: ${characterCount}`;
+      document.getElementById('locationCount').textContent = `LOCALIZAÇÕES: ${locationCount}`;
+      document.getElementById('episodeCount').textContent = `EPISÓDIOS: ${episodeCount}`;
+    }))
+    .catch(function (error) {
+      console.log(error);
+    });
+}
 
-            searchLocations();
-        }))
-        .catch(function (error) {
-            console.log(error);
-        });
-    }
+// Chame a função updateCounts no carregamento inicial da página
+updateCounts();
+
 
     function searchLocations() {
         axios.get('https://rickandmortyapi.com/api/location')
