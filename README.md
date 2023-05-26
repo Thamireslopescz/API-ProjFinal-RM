@@ -1,4 +1,4 @@
- ![rm name](https://github.com/Thamireslopescz/API-ProjFinal-RM/assets/100656019/644bd4db-9d87-4417-830a-f3c4ed0cea5a)
+![Rick_and_Morty svg](https://github.com/Thamireslopescz/API-ProjFinal-RM/assets/100656019/39114472-8c71-485f-8bb0-0d66119b1add)
 
 # API de Rick and Morty
 
